@@ -7,7 +7,7 @@ body {
     min-height: 100vh;
     font-family: 'Press Start 2P', 'Microsoft JhengHei', sans-serif;
     margin: 0;
-    padding: 10px 0; /* 在手機上給上下一些空間 */
+    padding: 10px 0;
     box-sizing: border-box;
 }
 
@@ -22,14 +22,19 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%; /* 讓包裹容器撐滿 */
-    max-width: 800px; /* 但最大寬度不超過原設計 */
+    width: 100%;
+    max-width: 800px;
 }
+
+.game-content-block {
+    width: 100%;
+}
+
 
 /* --- 頂部 UI 面板 --- */
 #top-panel {
     background-color: #663300;
-    width: 100%; /* 寬度自適應 */
+    width: 100%;
     padding: 10px;
     border: 3px solid #3D2314;
     border-bottom: none;
@@ -43,36 +48,35 @@ h1 {
 .panel-section {
     display: flex;
     align-items: center;
-    gap: 15px; /* 稍微縮小間距 */
+    gap: 15px;
 }
 
-/* *** 修改：貨幣與時間顯示區塊樣式 *** */
 .currency-display, .time-display {
-    background-color: #2F1B0F; /* 更深的背景色 */
-    padding: 8px 12px; /* 稍微調整內距 */
+    background-color: #2F1B0F;
+    padding: 8px 12px;
     border-radius: 5px;
-    font-size: 14px; /* 稍微縮小字體 */
+    font-size: 14px;
     letter-spacing: 1px;
-    border: 2px solid #A0522D; /* 加上邊框增加層次感 */
-    color: #FFD700; /* 金幣顏色 */
+    border: 2px solid #A0522D;
+    color: #FFD700;
     text-shadow: 1px 1px #000;
 }
 
-.currency-display:nth-child(2) { /* 針對鑽石顯示區 */
-    color: #B9F2FF; /* 鑽石顏色 */
+.currency-display:nth-child(2) {
+    color: #B9F2FF;
 }
 
 .time-display {
-    font-size: 18px; /* 稍微縮小字體 */
-    color: #FFFFFF; /* 時間用白色 */
+    font-size: 18px;
+    color: #FFFFFF;
 }
 
 .button-section {
-    gap: 8px; /* 縮小按鈕間距 */
+    gap: 8px;
 }
 
 .ui-button {
-    padding: 8px 10px; /* 縮小按鈕 */
+    padding: 8px 10px;
     font-size: 12px;
     font-family: 'Press Start 2P', sans-serif;
     color: #fff;
@@ -94,20 +98,18 @@ h1 {
     box-shadow: 0 2px #663300;
 }
 
-
 /* --- 遊戲主容器 --- */
 .game-container {
     border: 3px solid #663300;
     position: relative;
     font-family: 'Microsoft JhengHei', sans-serif;
-    width: 100%; /* 寬度自適應 */
-    /* 透過JS控制 aspect-ratio */
+    width: 100%;
 }
 
 #gameCanvas {
     display: block;
-    width: 100%; /* 關鍵：讓 canvas 寬度充滿容器 */
-    height: auto; /* 關鍵：讓 canvas 高度自動縮放以維持比例 */
+    width: 100%;
+    height: auto;
 }
 
 /* 天氣與效果顯示 */
@@ -126,7 +128,7 @@ h1 {
     color: white;
     padding: 5px 15px;
     border-radius: 20px;
-    font-size: 14px; /* 手機上縮小字體 */
+    font-size: 14px;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -147,7 +149,7 @@ h1 {
     color: white;
     padding: 3px 10px;
     border-radius: 15px;
-    font-size: 12px; /* 手機上縮小字體 */
+    font-size: 12px;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -157,14 +159,14 @@ h1 {
     position: absolute;
     bottom: 10px;
     right: 10px;
-    background-color: rgba(47, 27, 15, 0.7); /* 深棕色背景 */
-    color: #EAE0D5; /* 淺色文字 */
+    background-color: rgba(47, 27, 15, 0.7);
+    color: #EAE0D5;
     padding: 5px 10px;
     border-radius: 15px;
-    font-size: 14px; /* 手機上縮小字體 */
+    font-size: 14px;
     font-family: 'Press Start 2P', sans-serif;
     text-shadow: 1px 1px 2px #000;
-    border: 2px solid #8B4513; /* 邊框 */
+    border: 2px solid #8B4513;
 }
 
 
@@ -181,7 +183,7 @@ h1 {
     background-color: #F5DEB3; color: #3D2314;
     padding: 15px;
     border-radius: 10px; border: 5px solid #8B4513;
-    width: 90vw; /* 手機上使用視窗寬度百分比 */
+    width: 90vw;
     max-width: 600px; text-align: center;
     display: flex;
     flex-direction: column;
@@ -195,16 +197,16 @@ h1 {
 
 #modal-nav { display: flex; justify-content: center; margin-bottom: 15px; border-bottom: 2px solid #A0522D; }
 .modal-nav-btn {
-    padding: 10px 15px; /* 縮小按鈕 */
+    padding: 10px 15px;
     border: none; background-color: transparent; cursor: pointer;
-    font-size: 14px; /* 縮小字體 */
+    font-size: 14px;
     color: #A0522D; border-bottom: 3px solid transparent;
     transition: color 0.2s, border-bottom-color 0.2s; font-family: 'Press Start 2P', sans-serif;
 }
 .modal-nav-btn.active { font-weight: bold; color: #8B4513; border-bottom-color: #DAA520; }
 
 #modal-items-container {
-    display: flex; justify-content: center; /* 改為置中 */
+    display: flex; justify-content: center;
     flex-wrap: wrap;
     min-height: 100px;
     overflow-y: auto;
@@ -216,11 +218,11 @@ h1 {
     border: 2px solid #A0522D; border-radius: 8px;
     padding: 10px;
     margin: 8px;
-    width: 200px; /* 給定一個基礎寬度 */
-    max-width: 45%; /* 但在小螢幕上最多佔45%，形成兩欄 */
+    width: 200px;
+    max-width: 45%;
     background-color: #FFF8DC;
     display: flex; flex-direction: column; justify-content: space-between;
-    flex-grow: 1; /* 允許項目伸展 */
+    flex-grow: 1;
 }
 .shop-item h3 { font-size: 14px; margin: 0 0 10px 0; color: #A0522D; }
 .shop-item p {
@@ -244,7 +246,7 @@ h1 {
 .use-btn { background-color: #ffc107; color: black; }
 .buy-btn:disabled { background-color: #999; cursor: not-allowed; }
 
-.shop-item-upgrade { width: 250px; max-width: 90%; /* 在手機上佔滿寬度 */ }
+.shop-item-upgrade { width: 250px; max-width: 90%; }
 .shop-item .level { font-size: 12px; color: #555; margin-bottom: 10px; }
 
 /* ============================================== */
@@ -252,10 +254,9 @@ h1 {
 /* ============================================== */
 @media (max-width: 768px) {
     body {
-        padding: 0; /* 手機上移除 body 的邊距 */
+        padding: 0;
     }
 
-    /* 頂部面板改為垂直堆疊 */
     #top-panel {
         flex-direction: column;
         gap: 10px;
@@ -265,7 +266,7 @@ h1 {
     .panel-section {
         width: 100%;
         justify-content: center;
-        flex-wrap: wrap; /* 允許內部元素換行 */
+        flex-wrap: wrap;
     }
 
     .currency-section {
@@ -278,8 +279,54 @@ h1 {
         order: 3;
     }
 
-    /* 商店物品在手機上改為單欄 */
     .shop-item {
         max-width: 80%;
     }
+}
+
+/* ============================================== */
+/* =========== 全螢幕模式樣式 (最終修正版) ============ */
+/* ============================================== */
+.game-wrapper.fullscreen-mode {
+    width: 100%;
+    height: 100%;
+    background-color: #3D2314;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    /* 取消內部的 flex 屬性，交給子元素處理 */
+    flex-direction: initial;
+    max-width: none;
+}
+
+.fullscreen-mode .game-content-block {
+    display: flex;
+    flex-direction: column;
+    /* 根據螢幕的寬度和高度，決定遊戲內容的最大尺寸 */
+    max-width: 98vw;
+    max-height: 98vh;
+    /* 核心：讓整個內容塊保持一個大致的比例 */
+    /* (600是畫布高度, 65是估計的UI面板高度) */
+    aspect-ratio: 800 / (600 + 65);
+}
+
+.fullscreen-mode #top-panel {
+    /* 在flex佈局中，不自動收縮 */
+    flex-shrink: 0;
+}
+
+.fullscreen-mode .game-container {
+    /* 填滿剩餘的垂直空間 */
+    flex-grow: 1;
+    height: 100%;
+    border: none;
+}
+
+.fullscreen-mode #gameCanvas {
+    width: 100%;
+    height: 100%;
+    /* 確保畫布在自己的容器內能正確縮放 */
+    object-fit: contain;
 }

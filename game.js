@@ -9,6 +9,7 @@ window.onload = function() {
     const weatherStatusEl = document.getElementById('weather-status'); const weatherIconEl = document.getElementById('weather-icon'); const weatherNameEl = document.getElementById('weather-name'); const weatherTimeEl = document.getElementById('weather-time');
     const effectsStatusEl = document.getElementById('effects-status');
     const depthValueEl = document.getElementById('depth-value');
+    const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn'); // 全螢幕按鈕
 
     // --- 資料庫 ---
     const CLAW_TYPES = [
@@ -62,6 +63,7 @@ window.onload = function() {
     function triggerExplosion(explosionX, explosionY) { createExplosionAnimation(explosionX, explosionY, EXPLOSION_RADIUS); for (let i = items.length - 1; i >= 0; i--) { const item = items[i]; const distance = Math.sqrt(Math.pow(explosionX - item.x, 2) + Math.pow(explosionY - item.y, 2)); if (distance < EXPLOSION_RADIUS) { if (item.value && item.currency === 'coin') { playerProgress.coins += calculateGainedValue(item.value, item.type); } else if (item.value && item.currency === 'diamond') { playerProgress.diamonds += item.value; } items.splice(i, 1); } } updateCurrencyUI(); saveGame(); if (claw.state === 'extending') { claw.state = 'retracting'; claw.target = null; } }
     function refreshItemsOnField() { items = []; animations = []; claw.target = null; claw.state = 'swinging'; claw.length = 20; generateItems(); }
     function generateItems() { items = []; const depthLevel = playerProgress.mineDepthLevel; const itemCount = Math.floor(Math.random() * 5) + 8 + depthLevel; const totalRarityLevel = playerProgress.rarityBoostLevel + (depthLevel * 2); let emeraldChance = (depthLevel >= 10) ? totalRarityLevel * 0.004 : 0; let rubyChance = (depthLevel >= 5) ? totalRarityLevel * 0.006 : 0; let diamondChance = totalRarityLevel * 0.005; if (currentWeather && currentWeather.effect.diamondChanceBonus) { diamondChance += currentWeather.effect.diamondChanceBonus; } const bombChance = 0.1; const dynamiteChance = 0.1; const chestChance = 0.05; const goldChanceInRocks = 0.4 + totalRarityLevel * 0.01; for (let i = 0; i < itemCount; i++) { const randomType = Math.random(); let item; const x = Math.random() * (canvas.width - 80) + 40; const y = Math.random() * (canvas.height - 300) + 150; if (randomType < emeraldChance) { item = { type: 'emerald', size: 18, value: 1200, currency: 'coin', weight: 4 }; } else if (randomType < emeraldChance + rubyChance) { item = { type: 'ruby', size: 16, value: 600, currency: 'coin', weight: 3 }; } else if (randomType < emeraldChance + rubyChance + diamondChance) { item = { type: 'diamond', size: 15, value: 1, currency: 'diamond', weight: 3 }; } else if (randomType < emeraldChance + rubyChance + diamondChance + bombChance) { item = { type: 'bomb', size: 20, weight: 1 }; } else if (randomType < emeraldChance + rubyChance + diamondChance + bombChance + dynamiteChance) { item = { type: 'dynamite', size: 25, weight: 1 }; } else if (randomType < emeraldChance + rubyChance + diamondChance + bombChance + dynamiteChance + chestChance) { item = { type: 'chest', size: 30, weight: 4 }; } else { const isGold = Math.random() < goldChanceInRocks; const size = Math.random() * 20 + 15; item = { type: isGold ? 'gold' : 'rock', size: size, value: isGold ? Math.round(size * 5) : Math.round(size * 0.5), currency: 'coin', weight: isGold ? Math.round(size / 10) : Math.round(size / 5) }; } item.x = x; item.y = y; items.push(item); } }
+
     function resetScene() {
         timeLeft = 60;
         timeEl.innerText = timeLeft;
@@ -76,6 +78,40 @@ window.onload = function() {
         generateItems();
     }
 
+    // --- 全螢幕處理函式 (修正版) ---
+    function toggleFullscreen() {
+        const gameWrapper = document.querySelector('.game-wrapper');
+
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            if (gameWrapper.requestFullscreen) {
+                gameWrapper.requestFullscreen();
+            } else if (gameWrapper.webkitRequestFullscreen) {
+                gameWrapper.webkitRequestFullscreen();
+            } else if (gameWrapper.msRequestFullscreen) {
+                gameWrapper.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+
+    function handleFullscreenChange() {
+        const gameWrapper = document.querySelector('.game-wrapper');
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+            gameWrapper.classList.add('fullscreen-mode');
+            toggleFullscreenBtn.textContent = '離開全螢幕';
+        } else {
+            gameWrapper.classList.remove('fullscreen-mode');
+            toggleFullscreenBtn.textContent = '全螢幕';
+        }
+    }
+
     // --- 事件監聽 ---
     openShopBtn.addEventListener('click', () => openModal('shop'));
     openUpgradesBtn.addEventListener('click', () => openModal('upgrades'));
@@ -86,12 +122,11 @@ window.onload = function() {
     window.addEventListener('keydown', function(e) { if (isGamePaused || autoClawGrabsLeft > 0) return; if ((e.code === 'Space' || e.code === 'ArrowDown') && claw.state === 'swinging') { claw.state = 'extending'; } });
     window.addEventListener('beforeunload', saveGame);
     
-    // *** 新增：手機觸控與滑鼠點擊座標轉換 ***
+    // --- 手機觸控與滑鼠點擊座標轉換 ---
     function getCanvasCoordinates(event) {
         const rect = canvas.getBoundingClientRect();
         let eventX, eventY;
 
-        // 處理觸控或滑鼠事件
         if (event.touches && event.touches.length > 0) {
             eventX = event.touches[0].clientX;
             eventY = event.touches[0].clientY;
@@ -109,26 +144,29 @@ window.onload = function() {
 
     function handleCanvasInteraction(event) {
         if (isGamePaused) return;
-        event.preventDefault(); // 防止點擊穿透或頁面滾動
+        event.preventDefault();
 
         const { x: clickX, y: clickY } = getCanvasCoordinates(event);
 
-        // 檢查是否點擊小狗
         if (clickX >= DOG_CLICK_AREA.x && clickX <= DOG_CLICK_AREA.x + DOG_CLICK_AREA.width &&
             clickY >= DOG_CLICK_AREA.y && clickY <= DOG_CLICK_AREA.y + DOG_CLICK_AREA.height) {
             openModal('dogUpgrade');
-            return; // 點擊小狗後不觸發鉤爪
+            return;
         }
 
-        // 觸發鉤爪
         if (autoClawGrabsLeft <= 0 && claw.state === 'swinging') {
             claw.state = 'extending';
         }
     }
 
-    // 綁定滑鼠與觸控事件
-    canvas.addEventListener('click', handleCanvasInteraction); // 保留滑鼠點擊
-    canvas.addEventListener('touchstart', handleCanvasInteraction); // 新增觸控事件
+    canvas.addEventListener('click', handleCanvasInteraction);
+    canvas.addEventListener('touchstart', handleCanvasInteraction);
+
+    // --- 全螢幕事件監聽 ---
+    toggleFullscreenBtn.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
 
     
     // --- 動畫與繪圖 ---
