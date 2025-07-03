@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>黃金礦工 Gold Miner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-wrapper">
+        <div id="top-panel">
+            <div class="panel-section currency-section">
+                <div class="currency-display">💰 <span id="coins">0</span></div>
+                <div class="currency-display">💎 <span id="diamonds">0</span></div>
+            </div>
+            <div class="panel-section time-section">
+                <div class="time-display">⏳ <span id="time">60</span></div>
+            </div>
+            <div class="panel-section button-section">
+                <button id="openShopBtn" class="ui-button">商店</button>
+                <button id="openUpgradesBtn" class="ui-button">升級</button>
+                <button id="openBackpackBtn" class="ui-button">背包</button>
+            </div>
+        </div>
+        
+        <div class="game-container">
+            <div id="weather-status" class="hidden">
+                <span id="weather-icon">☀️</span>
+                <span id="weather-name">晴天</span>
+                (<span id="weather-time">10</span>s)
+            </div>
+
+            <div id="effects-status">
+                <!-- 效果會由JS動態生成於此 -->
+            </div>
+
+            <div id="depth-meter">
+                <span id="depth-value">0</span>m
+            </div>
+            
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+        </div>
+    </div>
+
+    <div id="modal" class="hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">商店</h2>
+            <div id="modal-nav">
+                <button id="nav-claws" class="modal-nav-btn active">鉤爪</button>
+                <button id="nav-items" class="modal-nav-btn">道具</button>
+            </div>
+            <div id="modal-items-container"></div>
+            <button id="closeModalBtn">關閉</button>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>

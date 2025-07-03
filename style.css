@@ -1,0 +1,235 @@
+/* --- 整體與字體設定 --- */
+body {
+    background-color: #3D2314;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Press Start 2P', 'Microsoft JhengHei', sans-serif;
+    margin: 0;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #fff;
+    text-shadow: 2px 2px #000;
+    margin-bottom: 20px;
+}
+
+/* --- 遊戲整體包裹容器 --- */
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- 頂部 UI 面板 --- */
+#top-panel {
+    background-color: #663300;
+    width: 800px;
+    padding: 10px;
+    border: 3px solid #3D2314;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* *** 修改：貨幣與時間顯示區塊樣式 *** */
+.currency-display, .time-display {
+    background-color: #2F1B0F; /* 更深的背景色 */
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    border: 2px solid #A0522D; /* 加上邊框增加層次感 */
+    color: #FFD700; /* 金幣顏色 */
+    text-shadow: 1px 1px #000;
+}
+
+.currency-display:nth-child(2) { /* 針對鑽石顯示區 */
+    color: #B9F2FF; /* 鑽石顏色 */
+}
+
+.time-display {
+    font-size: 20px;
+    color: #FFFFFF; /* 時間用白色 */
+}
+
+.button-section {
+    gap: 10px;
+}
+
+.ui-button {
+    padding: 10px 15px;
+    font-size: 14px;
+    font-family: 'Press Start 2P', sans-serif;
+    color: #fff;
+    background-color: #8B4513;
+    border: 2px solid #D2B48C;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px #663300;
+    text-shadow: 1px 1px #3D2314;
+}
+
+.ui-button:hover {
+    background-color: #A0522D;
+}
+
+.ui-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px #663300;
+}
+
+
+/* --- 遊戲主容器 --- */
+.game-container {
+    border: 3px solid #663300;
+    position: relative;
+    font-family: 'Microsoft JhengHei', sans-serif;
+}
+
+#gameCanvas {
+    display: block;
+}
+
+/* 天氣與效果顯示 */
+#weather-status, #effects-status, #depth-meter {
+    font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+    text-shadow: 1px 1px 2px #000;
+    z-index: 10;
+}
+
+#weather-status {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#weather-status.hidden { display: none; }
+
+#effects-status {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.effect-item {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#depth-meter {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(47, 27, 15, 0.7); /* 深棕色背景 */
+    color: #EAE0D5; /* 淺色文字 */
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-family: 'Press Start 2P', sans-serif;
+    text-shadow: 1px 1px 2px #000;
+    border: 2px solid #8B4513; /* 邊框 */
+}
+
+
+/* --- 模態框 (商店/背包/升級) --- */
+#modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
+    font-family: 'Press Start 2P', sans-serif;
+}
+#modal.hidden { display: none; }
+
+.modal-content {
+    background-color: #F5DEB3; color: #3D2314;
+    padding: 15px; /* 修改 */
+    border-radius: 10px; border: 5px solid #8B4513;
+    width: 80%; max-width: 600px; text-align: center;
+    display: flex; /* 新增 */
+    flex-direction: column; /* 新增 */
+    max-height: 85vh; /* 新增: 限制最大高度為視窗的85%，避免超出螢幕 */
+}
+.modal-content h2 { margin-top: 0; color: #8B4513; }
+.modal-content #closeModalBtn {
+    font-family: 'Press Start 2P', sans-serif;
+    margin-top: 15px; /* 新增: 給關閉按鈕一點空間 */
+}
+
+#modal-nav { display: flex; justify-content: center; margin-bottom: 15px; border-bottom: 2px solid #A0522D; }
+.modal-nav-btn {
+    padding: 10px 20px; border: none; background-color: transparent; cursor: pointer;
+    font-size: 16px; color: #A0522D; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-bottom-color 0.2s; font-family: 'Press Start 2P', sans-serif;
+}
+.modal-nav-btn.active { font-weight: bold; color: #8B4513; border-bottom-color: #DAA520; }
+
+#modal-items-container {
+    display: flex; justify-content: space-around; flex-wrap: wrap;
+    min-height: 100px;
+    overflow-y: auto; /* 新增: 當內容超出時，顯示垂直滾動條 */
+    flex-grow: 1; /* 新增: 讓此容器填滿可用空間 */
+    padding: 10px 0; /* 新增: 給滾動區域內部一點上下間距 */
+}
+
+.shop-item {
+    border: 2px solid #A0522D; border-radius: 8px;
+    padding: 10px; /* 修改 */
+    margin: 8px; /* 修改 */
+    width: 150px; background-color: #FFF8DC;
+    display: flex; flex-direction: column; justify-content: space-between;
+}
+.shop-item h3 { font-size: 14px; margin: 0 0 10px 0; color: #A0522D; }
+.shop-item p {
+    font-size: 12px;
+    min-height: 60px; /* 修改: 使用最小高度替代固定高度，更具彈性 */
+    height: auto;
+    color: #333; margin: 0; line-height: 1.5;
+}
+.shop-item .price { font-weight: bold; color: #DAA520; text-shadow: 1px 1px #000; margin-top: 10px; }
+.shop-item button {
+    width: 100%;
+    padding: 6px; /* 修改 */
+    font-size: 12px; /* 修改 */
+    margin-top: 10px; border: none; border-radius: 5px; color: white; cursor: pointer; font-weight: bold; transition: opacity 0.2s; font-family: 'Press Start 2P', sans-serif;
+}
+.shop-item button:hover:not(:disabled) { opacity: 0.85; }
+
+.buy-btn { background-color: #28a745; }
+.equip-btn { background-color: #007bff; }
+.equipped-btn { background-color: #6c757d; }
+.use-btn { background-color: #ffc107; color: black; }
+.buy-btn:disabled { background-color: #999; cursor: not-allowed; }
+
+.shop-item-upgrade { width: 250px; }
+.shop-item .level { font-size: 12px; color: #555; margin-bottom: 10px; }
