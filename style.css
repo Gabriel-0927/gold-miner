@@ -7,7 +7,7 @@ body {
     min-height: 100vh;
     font-family: 'Press Start 2P', 'Microsoft JhengHei', sans-serif;
     margin: 0;
-    padding: 20px 0;
+    padding: 10px 0; /* 在手機上給上下一些空間 */
     box-sizing: border-box;
 }
 
@@ -22,12 +22,14 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%; /* 讓包裹容器撐滿 */
+    max-width: 800px; /* 但最大寬度不超過原設計 */
 }
 
 /* --- 頂部 UI 面板 --- */
 #top-panel {
     background-color: #663300;
-    width: 800px;
+    width: 100%; /* 寬度自適應 */
     padding: 10px;
     border: 3px solid #3D2314;
     border-bottom: none;
@@ -41,16 +43,16 @@ h1 {
 .panel-section {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px; /* 稍微縮小間距 */
 }
 
 /* *** 修改：貨幣與時間顯示區塊樣式 *** */
 .currency-display, .time-display {
     background-color: #2F1B0F; /* 更深的背景色 */
-    padding: 8px 15px;
+    padding: 8px 12px; /* 稍微調整內距 */
     border-radius: 5px;
-    font-size: 16px;
-    letter-spacing: 2px;
+    font-size: 14px; /* 稍微縮小字體 */
+    letter-spacing: 1px;
     border: 2px solid #A0522D; /* 加上邊框增加層次感 */
     color: #FFD700; /* 金幣顏色 */
     text-shadow: 1px 1px #000;
@@ -61,17 +63,17 @@ h1 {
 }
 
 .time-display {
-    font-size: 20px;
+    font-size: 18px; /* 稍微縮小字體 */
     color: #FFFFFF; /* 時間用白色 */
 }
 
 .button-section {
-    gap: 10px;
+    gap: 8px; /* 縮小按鈕間距 */
 }
 
 .ui-button {
-    padding: 10px 15px;
-    font-size: 14px;
+    padding: 8px 10px; /* 縮小按鈕 */
+    font-size: 12px;
     font-family: 'Press Start 2P', sans-serif;
     color: #fff;
     background-color: #8B4513;
@@ -98,10 +100,14 @@ h1 {
     border: 3px solid #663300;
     position: relative;
     font-family: 'Microsoft JhengHei', sans-serif;
+    width: 100%; /* 寬度自適應 */
+    /* 透過JS控制 aspect-ratio */
 }
 
 #gameCanvas {
     display: block;
+    width: 100%; /* 關鍵：讓 canvas 寬度充滿容器 */
+    height: auto; /* 關鍵：讓 canvas 高度自動縮放以維持比例 */
 }
 
 /* 天氣與效果顯示 */
@@ -120,7 +126,7 @@ h1 {
     color: white;
     padding: 5px 15px;
     border-radius: 20px;
-    font-size: 16px;
+    font-size: 14px; /* 手機上縮小字體 */
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -141,7 +147,7 @@ h1 {
     color: white;
     padding: 3px 10px;
     border-radius: 15px;
-    font-size: 14px;
+    font-size: 12px; /* 手機上縮小字體 */
     display: flex;
     align-items: center;
     gap: 5px;
@@ -153,9 +159,9 @@ h1 {
     right: 10px;
     background-color: rgba(47, 27, 15, 0.7); /* 深棕色背景 */
     color: #EAE0D5; /* 淺色文字 */
-    padding: 5px 15px;
+    padding: 5px 10px;
     border-radius: 15px;
-    font-size: 16px;
+    font-size: 14px; /* 手機上縮小字體 */
     font-family: 'Press Start 2P', sans-serif;
     text-shadow: 1px 1px 2px #000;
     border: 2px solid #8B4513; /* 邊框 */
@@ -173,54 +179,61 @@ h1 {
 
 .modal-content {
     background-color: #F5DEB3; color: #3D2314;
-    padding: 15px; /* 修改 */
+    padding: 15px;
     border-radius: 10px; border: 5px solid #8B4513;
-    width: 80%; max-width: 600px; text-align: center;
-    display: flex; /* 新增 */
-    flex-direction: column; /* 新增 */
-    max-height: 85vh; /* 新增: 限制最大高度為視窗的85%，避免超出螢幕 */
+    width: 90vw; /* 手機上使用視窗寬度百分比 */
+    max-width: 600px; text-align: center;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
 }
 .modal-content h2 { margin-top: 0; color: #8B4513; }
 .modal-content #closeModalBtn {
     font-family: 'Press Start 2P', sans-serif;
-    margin-top: 15px; /* 新增: 給關閉按鈕一點空間 */
+    margin-top: 15px;
 }
 
 #modal-nav { display: flex; justify-content: center; margin-bottom: 15px; border-bottom: 2px solid #A0522D; }
 .modal-nav-btn {
-    padding: 10px 20px; border: none; background-color: transparent; cursor: pointer;
-    font-size: 16px; color: #A0522D; border-bottom: 3px solid transparent;
+    padding: 10px 15px; /* 縮小按鈕 */
+    border: none; background-color: transparent; cursor: pointer;
+    font-size: 14px; /* 縮小字體 */
+    color: #A0522D; border-bottom: 3px solid transparent;
     transition: color 0.2s, border-bottom-color 0.2s; font-family: 'Press Start 2P', sans-serif;
 }
 .modal-nav-btn.active { font-weight: bold; color: #8B4513; border-bottom-color: #DAA520; }
 
 #modal-items-container {
-    display: flex; justify-content: space-around; flex-wrap: wrap;
+    display: flex; justify-content: center; /* 改為置中 */
+    flex-wrap: wrap;
     min-height: 100px;
-    overflow-y: auto; /* 新增: 當內容超出時，顯示垂直滾動條 */
-    flex-grow: 1; /* 新增: 讓此容器填滿可用空間 */
-    padding: 10px 0; /* 新增: 給滾動區域內部一點上下間距 */
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: 10px 0;
 }
 
 .shop-item {
     border: 2px solid #A0522D; border-radius: 8px;
-    padding: 10px; /* 修改 */
-    margin: 8px; /* 修改 */
-    width: 150px; background-color: #FFF8DC;
+    padding: 10px;
+    margin: 8px;
+    width: 200px; /* 給定一個基礎寬度 */
+    max-width: 45%; /* 但在小螢幕上最多佔45%，形成兩欄 */
+    background-color: #FFF8DC;
     display: flex; flex-direction: column; justify-content: space-between;
+    flex-grow: 1; /* 允許項目伸展 */
 }
 .shop-item h3 { font-size: 14px; margin: 0 0 10px 0; color: #A0522D; }
 .shop-item p {
     font-size: 12px;
-    min-height: 60px; /* 修改: 使用最小高度替代固定高度，更具彈性 */
+    min-height: 60px;
     height: auto;
     color: #333; margin: 0; line-height: 1.5;
 }
 .shop-item .price { font-weight: bold; color: #DAA520; text-shadow: 1px 1px #000; margin-top: 10px; }
 .shop-item button {
     width: 100%;
-    padding: 6px; /* 修改 */
-    font-size: 12px; /* 修改 */
+    padding: 6px;
+    font-size: 12px;
     margin-top: 10px; border: none; border-radius: 5px; color: white; cursor: pointer; font-weight: bold; transition: opacity 0.2s; font-family: 'Press Start 2P', sans-serif;
 }
 .shop-item button:hover:not(:disabled) { opacity: 0.85; }
@@ -231,5 +244,42 @@ h1 {
 .use-btn { background-color: #ffc107; color: black; }
 .buy-btn:disabled { background-color: #999; cursor: not-allowed; }
 
-.shop-item-upgrade { width: 250px; }
+.shop-item-upgrade { width: 250px; max-width: 90%; /* 在手機上佔滿寬度 */ }
 .shop-item .level { font-size: 12px; color: #555; margin-bottom: 10px; }
+
+/* ============================================== */
+/* =========== 手機版響應式設計 ============ */
+/* ============================================== */
+@media (max-width: 768px) {
+    body {
+        padding: 0; /* 手機上移除 body 的邊距 */
+    }
+
+    /* 頂部面板改為垂直堆疊 */
+    #top-panel {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .panel-section {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap; /* 允許內部元素換行 */
+    }
+
+    .currency-section {
+        order: 1;
+    }
+    .time-section {
+        order: 2;
+    }
+    .button-section {
+        order: 3;
+    }
+
+    /* 商店物品在手機上改為單欄 */
+    .shop-item {
+        max-width: 80%;
+    }
+}

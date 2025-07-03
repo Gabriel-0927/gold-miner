@@ -63,7 +63,6 @@ window.onload = function() {
     function refreshItemsOnField() { items = []; animations = []; claw.target = null; claw.state = 'swinging'; claw.length = 20; generateItems(); }
     function generateItems() { items = []; const depthLevel = playerProgress.mineDepthLevel; const itemCount = Math.floor(Math.random() * 5) + 8 + depthLevel; const totalRarityLevel = playerProgress.rarityBoostLevel + (depthLevel * 2); let emeraldChance = (depthLevel >= 10) ? totalRarityLevel * 0.004 : 0; let rubyChance = (depthLevel >= 5) ? totalRarityLevel * 0.006 : 0; let diamondChance = totalRarityLevel * 0.005; if (currentWeather && currentWeather.effect.diamondChanceBonus) { diamondChance += currentWeather.effect.diamondChanceBonus; } const bombChance = 0.1; const dynamiteChance = 0.1; const chestChance = 0.05; const goldChanceInRocks = 0.4 + totalRarityLevel * 0.01; for (let i = 0; i < itemCount; i++) { const randomType = Math.random(); let item; const x = Math.random() * (canvas.width - 80) + 40; const y = Math.random() * (canvas.height - 300) + 150; if (randomType < emeraldChance) { item = { type: 'emerald', size: 18, value: 1200, currency: 'coin', weight: 4 }; } else if (randomType < emeraldChance + rubyChance) { item = { type: 'ruby', size: 16, value: 600, currency: 'coin', weight: 3 }; } else if (randomType < emeraldChance + rubyChance + diamondChance) { item = { type: 'diamond', size: 15, value: 1, currency: 'diamond', weight: 3 }; } else if (randomType < emeraldChance + rubyChance + diamondChance + bombChance) { item = { type: 'bomb', size: 20, weight: 1 }; } else if (randomType < emeraldChance + rubyChance + diamondChance + bombChance + dynamiteChance) { item = { type: 'dynamite', size: 25, weight: 1 }; } else if (randomType < emeraldChance + rubyChance + diamondChance + bombChance + dynamiteChance + chestChance) { item = { type: 'chest', size: 30, weight: 4 }; } else { const isGold = Math.random() < goldChanceInRocks; const size = Math.random() * 20 + 15; item = { type: isGold ? 'gold' : 'rock', size: size, value: isGold ? Math.round(size * 5) : Math.round(size * 0.5), currency: 'coin', weight: isGold ? Math.round(size / 10) : Math.round(size / 5) }; } item.x = x; item.y = y; items.push(item); } }
     function resetScene() {
-        // *** 修正點: 只重置回合相關的狀態 ***
         timeLeft = 60;
         timeEl.innerText = timeLeft;
         claw.state = 'swinging';
@@ -72,9 +71,7 @@ window.onload = function() {
         items = [];
         animations = [];
         stopWeather();
-        // autoClawGrabsLeft 不重置
-        autoClawTarget = null; // AI的臨時目標需要重置
-        // activeEffects 不重置
+        autoClawTarget = null;
         updateEffectsUI();
         generateItems();
     }
@@ -88,7 +85,51 @@ window.onload = function() {
     modalItemsContainer.addEventListener('click', e => { const targetButton = e.target.closest('button'); if (!targetButton) return; const clawId = targetButton.dataset.clawId; const upgradeId = targetButton.dataset.upgradeId; const itemId = targetButton.dataset.itemId; if (targetButton.classList.contains('buy-btn')) { if (clawId) { buyClaw(clawId); } else if (upgradeId === 'dog') { buyDogUpgrade(); } else if (upgradeId) { buyUpgrade(upgradeId); } else if (itemId) { buyConsumable(itemId); } } else if (targetButton.classList.contains('equip-btn') && clawId) { equipClaw(clawId); } else if (targetButton.classList.contains('use-btn') && itemId) { useConsumable(itemId); } });
     window.addEventListener('keydown', function(e) { if (isGamePaused || autoClawGrabsLeft > 0) return; if ((e.code === 'Space' || e.code === 'ArrowDown') && claw.state === 'swinging') { claw.state = 'extending'; } });
     window.addEventListener('beforeunload', saveGame);
-    canvas.addEventListener('click', function(e) { if (isGamePaused) return; const rect = canvas.getBoundingClientRect(); const clickX = e.clientX - rect.left; const clickY = e.clientY - rect.top; if (clickX >= DOG_CLICK_AREA.x && clickX <= DOG_CLICK_AREA.x + DOG_CLICK_AREA.width && clickY >= DOG_CLICK_AREA.y && clickY <= DOG_CLICK_AREA.y + DOG_CLICK_AREA.height) { openModal('dogUpgrade'); } });
+    
+    // *** 新增：手機觸控與滑鼠點擊座標轉換 ***
+    function getCanvasCoordinates(event) {
+        const rect = canvas.getBoundingClientRect();
+        let eventX, eventY;
+
+        // 處理觸控或滑鼠事件
+        if (event.touches && event.touches.length > 0) {
+            eventX = event.touches[0].clientX;
+            eventY = event.touches[0].clientY;
+        } else {
+            eventX = event.clientX;
+            eventY = event.clientY;
+        }
+
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const canvasX = (eventX - rect.left) * scaleX;
+        const canvasY = (eventY - rect.top) * scaleY;
+        return { x: canvasX, y: canvasY };
+    }
+
+    function handleCanvasInteraction(event) {
+        if (isGamePaused) return;
+        event.preventDefault(); // 防止點擊穿透或頁面滾動
+
+        const { x: clickX, y: clickY } = getCanvasCoordinates(event);
+
+        // 檢查是否點擊小狗
+        if (clickX >= DOG_CLICK_AREA.x && clickX <= DOG_CLICK_AREA.x + DOG_CLICK_AREA.width &&
+            clickY >= DOG_CLICK_AREA.y && clickY <= DOG_CLICK_AREA.y + DOG_CLICK_AREA.height) {
+            openModal('dogUpgrade');
+            return; // 點擊小狗後不觸發鉤爪
+        }
+
+        // 觸發鉤爪
+        if (autoClawGrabsLeft <= 0 && claw.state === 'swinging') {
+            claw.state = 'extending';
+        }
+    }
+
+    // 綁定滑鼠與觸控事件
+    canvas.addEventListener('click', handleCanvasInteraction); // 保留滑鼠點擊
+    canvas.addEventListener('touchstart', handleCanvasInteraction); // 新增觸控事件
+
     
     // --- 動畫與繪圖 ---
     function createValueTextAnimation(x, y, text) { animations.push({ type: 'valueText', x: x, y: y, text: text, life: 60, duration: 60, vy: -1 }); }
@@ -180,6 +221,13 @@ window.onload = function() {
     const weatherTicker = setInterval(handleWeatherTick, 1000);
 
     // --- 遊戲初始化 ---
-    function init() { loadGame(); applyEquippedClaw(); updateCurrencyUI(); updateDepthUI(); resetScene(); gameLoop(); }
+    function init() {
+        loadGame();
+        applyEquippedClaw();
+        updateCurrencyUI();
+        updateDepthUI();
+        resetScene();
+        gameLoop();
+    }
     init();
 };
